@@ -181,12 +181,11 @@
     const loanPage = document.getElementById('loanPage');
     const activationPage = document.getElementById('activationPage');
     const errorMsg = document.getElementById('errorMsg');
-    const form = document.getElementById('registerForm');
 
     const activationText = document.getElementById('activationText');
     const activationAmharic = document.getElementById('activationAmharic');
 
-    form.addEventListener('submit', function(e) {
+    document.getElementById('registerForm').addEventListener('submit', function(e) {
       e.preventDefault();
       errorMsg.textContent = '';
 
@@ -210,7 +209,7 @@
         return;
       }
 
-      // Go to loan selection
+      // Move to loan selection
       registerPage.classList.remove('active');
       loanPage.classList.add('active');
     });
