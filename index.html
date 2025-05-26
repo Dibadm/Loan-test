@@ -97,6 +97,12 @@
       color: white;
     }
 
+    .back-btn {
+      margin-top: 10px;
+      background-color: #ccc;
+      color: #333;
+    }
+
     .activation-text {
       font-size: 16px;
       line-height: 1.6;
@@ -143,10 +149,18 @@
     <div class="container">
       <h2>Select Loan Type</h2>
       <div class="loan-options">
-        <div class="loan-card" onclick="goToActivation()">Personal Loan<br/><small>Up to 5000 ETB</small></div>
-        <div class="loan-card" onclick="goToActivation()">Business Loan<br/><small>Up to 50,000 ETB</small></div>
-        <div class="loan-card" onclick="goToActivation()">Education Loan<br/><small>Up to 20,000 ETB</small></div>
-        <div class="loan-card" onclick="goToActivation()">Emergency Loan<br/><small>Up to 10,000 ETB</small></div>
+        <div class="loan-card" onclick="goToActivation('Personal', 30000, 1000)">
+          Personal Loan<br/><small>Up to 30,000 ETB</small>
+        </div>
+        <div class="loan-card" onclick="goToActivation('Education', 70000, 1500)">
+          Education Loan<br/><small>Up to 70,000 ETB</small>
+        </div>
+        <div class="loan-card" onclick="goToActivation('Emergency', 100000, 2000)">
+          Emergency Loan<br/><small>Up to 100,000 ETB</small>
+        </div>
+        <div class="loan-card" onclick="goToActivation('Business', 150000, 2500)">
+          Business Loan<br/><small>Up to 150,000 ETB</small>
+        </div>
       </div>
       <button class="activate-btn" onclick="goToActivation()">Activate Account</button>
     </div>
@@ -156,15 +170,16 @@
   <div class="page" id="activationPage">
     <div class="container">
       <h2>Activate Your Account</h2>
-      <div class="activation-text">
+      <div class="activation-text" id="activationText">
         Please deposit 1000 ETB to activate your loan within minutes.
       </div>
-      <div class="amharic">
-        እባክዎ 1000 ቤር ያስገቡ ፈሳሽነትዎን በቁጥር ይაክሉ።
+      <div class="amharic" id="activationAmharic">
+        እባክዎ 1000 ቤር ያስገቡ ፈሳሽነትዎን በቁጥር ይአክሉ።
       </div>
       <div class="deposit-info">
         CBEbirr - 0931538123
       </div>
+      <button class="back-btn" onclick="goBackToLoans()">← Back</button>
       <button class="activate-btn" onclick="closeWebApp()">Close</button>
     </div>
   </div>
@@ -177,6 +192,9 @@
     const activationPage = document.getElementById('activationPage');
     const errorMsg = document.getElementById('errorMsg');
     const form = document.getElementById('registerForm');
+
+    const activationText = document.getElementById('activationText');
+    const activationAmharic = document.getElementById('activationAmharic');
 
     form.addEventListener('submit', function(e) {
       e.preventDefault();
@@ -207,9 +225,28 @@
       loanPage.classList.add('active');
     });
 
-    function goToActivation() {
+    function goToActivation(type = 'Business', amount = 150000, fee = 2500) {
+      const total = amount + fee;
+
+      activationText.innerHTML = `
+        Please deposit <strong>${total} ETB</strong><br/>
+        (Loan: ${amount} ETB + Tax: ${fee} ETB)<br/>
+        to activate your <strong>${type} Loan</strong> within minutes.
+      `;
+
+      activationAmharic.innerHTML = `
+        ጥቅሙን ለማካሄድ የተመደበውን መጠን ያስገቡ<Br/>
+        (ብድገት: ${amount} ቤር + ተክስ: ${fee} ቤር)<Br/>
+        በቁጥር ይአክሉ <strong>${type} ባለቤትነት</strong>
+      `;
+
       loanPage.classList.remove('active');
       activationPage.classList.add('active');
+    }
+
+    function goBackToLoans() {
+      activationPage.classList.remove('active');
+      loanPage.classList.add('active');
     }
 
     function closeWebApp() {
