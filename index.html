@@ -90,7 +90,6 @@
       margin-top: 15px;
       background-color: #ccc;
       color: #333;
-      border: none;
       width: 100%;
     }
 
@@ -160,4 +159,91 @@
   <!-- Page 3: Activation Page -->
   <div class="page" id="activationPage">
     <div class="container">
-      <h2>Activate Your Account
+      <h2>Activate Your Account</h2>
+      <div class="activation-text" id="activationText">
+        Please deposit 1000 ETB to activate your loan within minutes.
+      </div>
+      <div class="amharic" id="activationAmharic">
+        እባክዎ 1000 ቤር ያስገቡ ፈሳሽነትዎን በቁጥር ይአክሉ።
+      </div>
+      <div class="deposit-info">
+        CBEbirr - 0931538123
+      </div>
+      <button class="back-btn" onclick="goBackToLoans()">← Back</button>
+      <button class="activate-btn" onclick="closeWebApp()">Close</button>
+    </div>
+  </div>
+
+  <!-- Telegram WebApp SDK -->
+  <script src="https://telegram.org/js/telegram-web-app.js "></script>
+  <script>
+    const registerPage = document.getElementById('registerPage');
+    const loanPage = document.getElementById('loanPage');
+    const activationPage = document.getElementById('activationPage');
+    const errorMsg = document.getElementById('errorMsg');
+    const form = document.getElementById('registerForm');
+
+    const activationText = document.getElementById('activationText');
+    const activationAmharic = document.getElementById('activationAmharic');
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      errorMsg.textContent = '';
+
+      const name = document.getElementById('name').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const address = document.getElementById('address').value.trim();
+      const password = document.getElementById('password').value.trim();
+
+      if (!/^\d{10}$/.test(phone)) {
+        errorMsg.textContent = 'Please enter a valid 10-digit phone number.';
+        return;
+      }
+
+      if (password.length < 6) {
+        errorMsg.textContent = 'Password must be at least 6 characters.';
+        return;
+      }
+
+      if (!name || !address) {
+        errorMsg.textContent = 'Please fill in all fields.';
+        return;
+      }
+
+      // Go to loan selection
+      registerPage.classList.remove('active');
+      loanPage.classList.add('active');
+    });
+
+    function goToActivation(type = 'Business', amount = 150000, fee = 2500) {
+      activationText.innerHTML = `
+        Please deposit <strong>${fee} ETB</strong><br/>
+        to get <strong>${amount.toLocaleString()} ETB</strong><br/>
+        as your <strong>${type} Loan</strong> within minutes.
+      `;
+
+      activationAmharic.innerHTML = `
+        ጥቅሙን ለማካሄድ የተመደበውን መጠን ያስገቡ<Br/>
+        <strong>${fee} ቤር</strong> ለማግኘት<br/>
+        <strong>${amount.toLocaleString()} ቤር</strong> በቁጥር ይአክሉ<Br/>
+        <strong>${type} ባለቤትነት</strong>
+      `;
+
+      loanPage.classList.remove('active');
+      activationPage.classList.add('active');
+    }
+
+    function goBackToLoans() {
+      activationPage.classList.remove('active');
+      loanPage.classList.add('active');
+    }
+
+    function closeWebApp() {
+      if (window.Telegram && window.Telegram.WebApp) {
+        Telegram.WebApp.close();
+      }
+    }
+  </script>
+
+</body>
+</html>
