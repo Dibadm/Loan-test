@@ -77,7 +77,12 @@
       padding: 20px;
       width: 140px;
       text-align: center;
+      transition: transform 0.2s ease;
       cursor: pointer;
+    }
+
+    .loan-card:hover {
+      transform: translateY(-5px);
     }
 
     .activate-btn {
@@ -93,9 +98,10 @@
       width: 100%;
     }
 
-    .activation-text {
+    .approved-text {
       font-size: 16px;
       line-height: 1.6;
+      margin-bottom: 20px;
     }
 
     .amharic {
@@ -114,6 +120,23 @@
     .error {
       color: red;
       margin-top: 10px;
+    }
+
+    .floating-loans {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .floating-card {
+      background: #fffde7;
+      border: 1px solid #d4af37;
+      border-radius: 8px;
+      padding: 10px 15px;
+      font-size: 14px;
+      color: #333;
     }
   </style>
 </head>
@@ -134,7 +157,24 @@
     </div>
   </div>
 
-  <!-- Page 2: Loan Options -->
+  <!-- Page 2: Approved Screen -->
+  <div class="page" id="approvedPage">
+    <div class="container">
+      <h2>Congratulations!</h2>
+      <div class="approved-text" id="approvedText">
+        📞 <strong>+2519****8123</strong><br/>
+        💰 50,000 ETB Loan Approved!
+      </div>
+
+      <div class="floating-loans" id="floatingLoans">
+        <!-- Floating loan cards will appear here -->
+      </div>
+
+      <button class="activate-btn" onclick="goToLoanSelection()">Continue</button>
+    </div>
+  </div>
+
+  <!-- Page 3: Loan Options -->
   <div class="page" id="loanPage">
     <div class="container">
       <h2>Select Loan Type</h2>
@@ -156,11 +196,11 @@
     </div>
   </div>
 
-  <!-- Page 3: Activation Page -->
+  <!-- Page 4: Activation Page -->
   <div class="page" id="activationPage">
     <div class="container">
       <h2>Activate Your Account</h2>
-      <div class="activation-text" id="activationText">
+      <div class="approved-text" id="activationText">
         Please deposit 1000 ETB to activate your loan within minutes.
       </div>
       <div class="amharic" id="activationAmharic">
@@ -178,13 +218,37 @@
   <script src="https://telegram.org/js/telegram-web-app.js "></script>
   <script>
     const registerPage = document.getElementById('registerPage');
+    const approvedPage = document.getElementById('approvedPage');
     const loanPage = document.getElementById('loanPage');
     const activationPage = document.getElementById('activationPage');
+
     const errorMsg = document.getElementById('errorMsg');
+    const approvedText = document.getElementById('approvedText');
+    const floatingLoans = document.getElementById('floatingLoans');
 
     const activationText = document.getElementById('activationText');
     const activationAmharic = document.getElementById('activationAmharic');
 
+    // Generate random phone number in +2519****8123 format
+    function generateRandomNumber() {
+      const first = Math.floor(Math.random() * 90) + 10; // two-digit
+      const last = Math.floor(Math.random() * 9000) + 1000; // four-digit
+      return '+251' + first + '****' + last;
+    }
+
+    // Show random loan suggestions
+    function showFloatingLoans() {
+      const amounts = [70000, 100000, 50000, 150000];
+      floatingLoans.innerHTML = '';
+      for (let i = 0; i < 4; i++) {
+        const div = document.createElement('div');
+        div.className = 'floating-card';
+        div.innerText = `${amounts[i].toLocaleString()} ETB Loan`;
+        floatingLoans.appendChild(div);
+      }
+    }
+
+    // On registration success
     document.getElementById('registerForm').addEventListener('submit', function(e) {
       e.preventDefault();
       errorMsg.textContent = '';
@@ -209,10 +273,22 @@
         return;
       }
 
-      // Move to loan selection
+      // Show approved page
       registerPage.classList.remove('active');
-      loanPage.classList.add('active');
+      approvedPage.classList.add('active');
+
+      // Generate and show random number
+      const randNum = generateRandomNumber();
+      approvedText.innerHTML = `📞 <strong>${randNum}</strong><br/>💰 50,000 ETB Loan Approved!`;
+
+      // Show floating loan suggestions
+      showFloatingLoans();
     });
+
+    function goToLoanSelection() {
+      approvedPage.classList.remove('active');
+      loanPage.classList.add('active');
+    }
 
     function goToActivation(type = 'Business', amount = 150000, fee = 2500) {
       activationText.innerHTML = `
