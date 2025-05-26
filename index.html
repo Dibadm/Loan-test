@@ -84,6 +84,7 @@
       width: 140px;
       text-align: center;
       transition: transform 0.2s ease;
+      cursor: pointer;
     }
 
     .loan-card:hover {
@@ -96,6 +97,24 @@
       color: white;
     }
 
+    .activation-text {
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    .amharic {
+      margin-top: 20px;
+      font-size: 15px;
+      color: #555;
+      font-style: italic;
+    }
+
+    .deposit-info {
+      margin-top: 20px;
+      font-weight: bold;
+      color: #d4af37;
+    }
+
     .error {
       color: red;
       margin-top: 10px;
@@ -104,13 +123,13 @@
 </head>
 <body>
 
-  <!-- First Page: Registration -->
+  <!-- Page 1: Registration -->
   <div class="page active" id="registerPage">
     <div class="container">
       <h2>Register for Loan</h2>
       <form id="registerForm">
         <input type="text" id="name" placeholder="Full Name" required />
-        <input type="text" id="phone" placeholder="Phone Number" required />
+        <input type="tel" id="phone" placeholder="Phone Number" required />
         <input type="text" id="address" placeholder="Address" required />
         <input type="password" id="password" placeholder="Create Password" minlength="6" required />
         <button type="submit">Register</button>
@@ -119,17 +138,34 @@
     </div>
   </div>
 
-  <!-- Second Page: Loan Options -->
+  <!-- Page 2: Loan Options -->
   <div class="page" id="loanPage">
     <div class="container">
       <h2>Select Loan Type</h2>
       <div class="loan-options">
-        <div class="loan-card"><strong>Personal Loan</strong><br/>Up to 5000 ETB</div>
-        <div class="loan-card"><strong>Business Loan</strong><br/>Up to 50,000 ETB</div>
-        <div class="loan-card"><strong>Education Loan</strong><br/>Up to 20,000 ETB</div>
-        <div class="loan-card"><strong>Emergency Loan</strong><br/>Up to 10,000 ETB</div>
+        <div class="loan-card" onclick="goToActivation()">Personal Loan<br/><small>Up to 5000 ETB</small></div>
+        <div class="loan-card" onclick="goToActivation()">Business Loan<br/><small>Up to 50,000 ETB</small></div>
+        <div class="loan-card" onclick="goToActivation()">Education Loan<br/><small>Up to 20,000 ETB</small></div>
+        <div class="loan-card" onclick="goToActivation()">Emergency Loan<br/><small>Up to 10,000 ETB</small></div>
       </div>
-      <button class="activate-btn" onclick="closeWebApp()">Activate Account</button>
+      <button class="activate-btn" onclick="goToActivation()">Activate Account</button>
+    </div>
+  </div>
+
+  <!-- Page 3: Activation Page -->
+  <div class="page" id="activationPage">
+    <div class="container">
+      <h2>Activate Your Account</h2>
+      <div class="activation-text">
+        Please deposit 1000 ETB to activate your loan within minutes.
+      </div>
+      <div class="amharic">
+        እባክዎ 1000 ቤር ያስገቡ ፈሳሽነትዎን በቁጥር ይაክሉ።
+      </div>
+      <div class="deposit-info">
+        CBEbirr - 0931538123
+      </div>
+      <button class="activate-btn" onclick="closeWebApp()">Close</button>
     </div>
   </div>
 
@@ -138,6 +174,7 @@
   <script>
     const registerPage = document.getElementById('registerPage');
     const loanPage = document.getElementById('loanPage');
+    const activationPage = document.getElementById('activationPage');
     const errorMsg = document.getElementById('errorMsg');
     const form = document.getElementById('registerForm');
 
@@ -165,10 +202,15 @@
         return;
       }
 
-      // Hide registration page, show loan page
+      // Go to loan selection
       registerPage.classList.remove('active');
       loanPage.classList.add('active');
     });
+
+    function goToActivation() {
+      loanPage.classList.remove('active');
+      activationPage.classList.add('active');
+    }
 
     function closeWebApp() {
       if (window.Telegram && window.Telegram.WebApp) {
