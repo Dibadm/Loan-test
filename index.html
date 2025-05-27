@@ -160,43 +160,20 @@
     </div>
   </div>
 
-  <!-- Page 3: Activation Page -->
-  <div class="page" id="activationPage">
-    <div class="container">
-      <h2>Activate Your Account</h2>
-      <div class="activation-text" id="activationText">
-        Please deposit 1000 ETB to activate your loan within minutes.
-      </div>
-      <div class="amharic" id="activationAmharic">
-        እባክዎ 1000 ቤር ያስገቡ ፈሳሽነትዎን በቁጥር ይአክሉ።
-      </div>
-      <div class="deposit-info">
-        CBEbirr - 0931538123
-      </div>
-      <button class="back-btn" onclick="goBackToLoans()">← Back</button>
-      <button class="activate-btn" onclick="closeWebApp()">Close</button>
-    </div>
-  </div>
-
   <!-- Telegram WebApp SDK -->
   <script src="https://telegram.org/js/telegram-web-app.js "></script>
   <script>
     const registerPage = document.getElementById('registerPage');
     const loanPage = document.getElementById('loanPage');
-    const activationPage = document.getElementById('activationPage');
     const errorMsg = document.getElementById('errorMsg');
 
     const approvedStreamContainer = document.getElementById('approvedStreamContainer');
 
     // Generate fixed 13-digit number: 1000****26961
     function generateRandomNumber() {
-      let middle = '';
-      for (let i = 0; i < 4; i++) {
-        middle += '*'; // always 4 stars
-      }
-
-      const first = Math.floor(Math.random() * 900) + 100; // 3 random digits
-      const last = Math.floor(Math.random() * 90000) + 10000; // 5 random digits
+      const first = String(Math.floor(Math.random() * 900) + 100).padStart(3, '0'); // Always 3 digits
+      const middle = '****'; // Always 4 stars
+      const last = String(Math.floor(Math.random() * 90000) + 10000).padStart(5, '0'); // Always 5 digits
 
       return `1000${first}${middle}${last}`;
     }
@@ -254,38 +231,7 @@
       // Start live stream of approval numbers
       startApprovalStream();
     });
-
-    // Go to Activation Page
-    function goToActivation(type = 'Business', amount = 150000, fee = 2500) {
-      activationText.innerHTML = `
-        Please deposit <strong>${fee} ETB</strong><br/>
-        to get <strong>${amount.toLocaleString()} ETB</strong><br/>
-        as your <strong>${type} Loan</strong> within minutes.
-      `;
-
-      activationAmharic.innerHTML = `
-        ጥቅሙን ለማካሄድ የተመደበውን መጠን ያስገቡ<Br/>
-        <strong>${fee} ቤር</strong> ለማግኘት<br/>
-        <strong>${amount.toLocaleString()} ቤር</strong> በቁጥር ይአክሉ<Br/>
-        <strong>${type} ባለቤትነት</strong>
-      `;
-
-      loanPage.classList.remove('active');
-      activationPage.classList.add('active');
-    }
-
-    // Go back to Loan Selection
-    function goBackToLoans() {
-      activationPage.classList.remove('active');
-      loanPage.classList.add('active');
-    }
-
-    // Close WebApp
-    function closeWebApp() {
-      if (window.Telegram && window.Telegram.WebApp) {
-        Telegram.WebApp.close();
-      }
-    }
   </script>
+
 </body>
 </html>
