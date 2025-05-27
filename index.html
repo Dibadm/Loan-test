@@ -93,6 +93,13 @@
       padding: 10px 0;
     }
 
+    .approved-header {
+      font-weight: bold;
+      color: green;
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+
     .approved-number {
       display: inline-block;
       background: #fffde7;
@@ -104,36 +111,6 @@
       color: green;
       min-width: 140px;
       transition: opacity 0.3s ease;
-    }
-
-    .activation-text {
-      font-size: 16px;
-      line-height: 1.6;
-    }
-
-    .amharic {
-      margin-top: 20px;
-      font-size: 15px;
-      color: #555;
-      font-style: italic;
-    }
-
-    .deposit-info {
-      margin-top: 20px;
-      font-weight: bold;
-      color: #d4af37;
-    }
-
-    .back-btn {
-      margin-top: 15px;
-      background-color: #ccc;
-      color: #333;
-      width: 100%;
-    }
-
-    .error {
-      color: red;
-      margin-top: 10px;
     }
   </style>
 </head>
@@ -176,8 +153,9 @@
       <button class="activate-btn" onclick="goToActivation()">Activate Account</button>
 
       <!-- Horizontal Scroll Stream of Approvals -->
-      <div class="approved-stream" id="approvedStreamContainer">
-        <!-- Numbers will appear here -->
+      <div class="approved-stream">
+        <div class="approved-header">✔️ ተፈቀደ የገብያ ቁጥር</div>
+        <div id="approvedStreamContainer"></div>
       </div>
     </div>
   </div>
@@ -209,14 +187,18 @@
     const errorMsg = document.getElementById('errorMsg');
 
     const approvedStreamContainer = document.getElementById('approvedStreamContainer');
-    const activationText = document.getElementById('activationText');
-    const activationAmharic = document.getElementById('activationAmharic');
 
-    // Generate number in format: 1000****26961 → 13 digits total
+    // Generate fixed 13-digit number: 1000****26961
     function generateRandomNumber() {
-      const first = Math.floor(Math.random() * 900) + 100; // 3-digit
-      const last = Math.floor(Math.random() * 90000) + 10000; // 5-digit
-      return `1000${first}****${last}`;
+      let middle = '';
+      for (let i = 0; i < 4; i++) {
+        middle += '*'; // always 4 stars
+      }
+
+      const first = Math.floor(Math.random() * 900) + 100; // 3 random digits
+      const last = Math.floor(Math.random() * 90000) + 10000; // 5 random digits
+
+      return `1000${first}${middle}${last}`;
     }
 
     // Show random approval number
@@ -227,6 +209,7 @@
       div.textContent = `${number}`;
       approvedStreamContainer.appendChild(div);
 
+      // Remove old elements
       if (approvedStreamContainer.children.length > 10) {
         approvedStreamContainer.removeChild(approvedStreamContainer.firstChild);
       }
@@ -234,8 +217,8 @@
 
     // Start live stream of approvals
     function startApprovalStream() {
-      showRandomApproval();
-      setInterval(showRandomApproval, 2000);
+      showRandomApproval(); // Show one immediately
+      setInterval(showRandomApproval, 2000); // Every 2 seconds
     }
 
     // On registration success
@@ -264,9 +247,11 @@
         return;
       }
 
+      // Move to loan selection
       registerPage.classList.remove('active');
       loanPage.classList.add('active');
 
+      // Start live stream of approval numbers
       startApprovalStream();
     });
 
@@ -302,6 +287,5 @@
       }
     }
   </script>
-
 </body>
 </html>
