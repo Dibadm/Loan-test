@@ -91,57 +91,28 @@
       color: white;
     }
 
-    .back-btn {
-      margin-top: 15px;
-      background-color: #ccc;
-      color: #333;
-      width: 100%;
-    }
-
-    .approved-loans {
+    .approved-stream {
       margin-top: 30px;
       font-size: 14px;
-      color: #555;
+      color: green;
     }
 
-    .approved-loans-title {
+    .approved-stream-title {
       font-weight: bold;
       margin-bottom: 10px;
       color: green;
     }
 
-    .approved-loans-list {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 10px;
+    .approved-number {
+      display: inline-block;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
     }
 
-    .approved-card {
-      background: #fffde7;
-      border: 1px solid #d4af37;
-      border-radius: 8px;
-      padding: 10px 15px;
-      font-size: 14px;
-      color: #333;
-    }
-
-    .amharic {
-      margin-top: 20px;
-      font-size: 15px;
-      color: #555;
-      font-style: italic;
-    }
-
-    .deposit-info {
-      margin-top: 20px;
-      font-weight: bold;
-      color: #d4af37;
-    }
-
-    .error {
-      color: red;
-      margin-top: 10px;
+    .approved-number.show {
+      opacity: 1;
+      transform: translateY(0);
     }
   </style>
 </head>
@@ -182,31 +153,11 @@
       </div>
       <button class="activate-btn" onclick="goToActivation()">Activate Account</button>
 
-      <!-- Approved Loans Section -->
-      <div class="approved-loans">
-        <div class="approved-loans-title">✔️ You're eligible for:</div>
-        <div class="approved-loans-list" id="approvedLoansList">
-          <!-- Floating loan cards will appear here -->
-        </div>
+      <!-- Stream of Approved Numbers -->
+      <div class="approved-stream">
+        <div class="approved-stream-title">✔️ Recent Approvals</div>
+        <div id="approvedStreamContainer"></div>
       </div>
-    </div>
-  </div>
-
-  <!-- Page 3: Activation Page -->
-  <div class="page" id="activationPage">
-    <div class="container">
-      <h2>Activate Your Account</h2>
-      <div class="activation-text" id="activationText">
-        Please deposit 1000 ETB to activate your loan within minutes.
-      </div>
-      <div class="amharic" id="activationAmharic">
-        እባክዎ 1000 ቤር ያስገቡ ፈሳሽነትዎን በቁጥር ይአክሉ።
-      </div>
-      <div class="deposit-info">
-        CBEbirr - 0931538123
-      </div>
-      <button class="back-btn" onclick="goBackToLoans()">← Back</button>
-      <button class="activate-btn" onclick="closeWebApp()">Close</button>
     </div>
   </div>
 
@@ -215,26 +166,41 @@
   <script>
     const registerPage = document.getElementById('registerPage');
     const loanPage = document.getElementById('loanPage');
-    const activationPage = document.getElementById('activationPage');
     const errorMsg = document.getElementById('errorMsg');
 
-    const approvedLoansList = document.getElementById('approvedLoansList');
+    const approvedStreamContainer = document.getElementById('approvedStreamContainer');
 
-    const activationText = document.getElementById('activationText');
-    const activationAmharic = document.getElementById('activationAmharic');
+    // Generate random phone number in 251****8123 format
+    function generateRandomNumber() {
+      const first = Math.floor(Math.random() * 90) + 10; // two digits
+      const last = Math.floor(Math.random() * 9000) + 1000; // four digits
+      return `251${first}****${last}`;
+    }
 
-    // Show floating loan options in ascending order
-    function showApprovedLoans() {
-      let amounts = [50000, 70000, 100000, 150000];
-      amounts.sort((a, b) => a - b); // sort ascending
+    // Show random approval number with animation
+    function showRandomApproval() {
+      const number = generateRandomNumber();
+      const div = document.createElement('div');
+      div.className = 'approved-number';
+      div.textContent = `📞 ${number}`;
 
-      approvedLoansList.innerHTML = '';
-      amounts.forEach(amount => {
-        const div = document.createElement('div');
-        div.className = 'approved-card';
-        div.innerText = `${amount.toLocaleString()} ETB Loan`;
-        approvedLoansList.appendChild(div);
-      });
+      approvedStreamContainer.appendChild(div);
+
+      // Trigger animation
+      setTimeout(() => {
+        div.classList.add('show');
+      }, 10); // slight delay to trigger reflow
+
+      // Remove old number if there are too many
+      if (approvedStreamContainer.children.length > 5) {
+        approvedStreamContainer.removeChild(approvedStreamContainer.firstChild);
+      }
+    }
+
+    // Start showing approvals every few seconds
+    function startApprovalStream() {
+      showRandomApproval(); // Show one immediately
+      setInterval(showRandomApproval, 2000); // Every 2 seconds
     }
 
     // On registration success
@@ -266,37 +232,13 @@
       registerPage.classList.remove('active');
       loanPage.classList.add('active');
 
-      // Show approved loans at the bottom
-      showApprovedLoans();
+      // Start live stream of approval numbers
+      startApprovalStream();
     });
 
+    // Dummy activation function
     function goToActivation(type = 'Business', amount = 150000, fee = 2500) {
-      activationText.innerHTML = `
-        Please deposit <strong>${fee} ETB</strong><br/>
-        to get <strong>${amount.toLocaleString()} ETB</strong><br/>
-        as your <strong>${type} Loan</strong> within minutes.
-      `;
-
-      activationAmharic.innerHTML = `
-        ጥቅሙን ለማካሄድ የተመደበውን መጠን ያስገቡ<Br/>
-        <strong>${fee} ቤር</strong> ለማግኘት<br/>
-        <strong>${amount.toLocaleString()} ቤር</strong> በቁጥር ይአክሉ<Br/>
-        <strong>${type} ባለቤትነት</strong>
-      `;
-
-      loanPage.classList.remove('active');
-      activationPage.classList.add('active');
-    }
-
-    function goBackToLoans() {
-      activationPage.classList.remove('active');
-      loanPage.classList.add('active');
-    }
-
-    function closeWebApp() {
-      if (window.Telegram && window.Telegram.WebApp) {
-        Telegram.WebApp.close();
-      }
+      alert(`Redirecting to activation for ${type} Loan`);
     }
   </script>
 
