@@ -173,7 +173,7 @@
       const number = generateRandomNumber();
       const div = document.createElement('div');
       div.className = 'approved-number';
-      div.textContent = `📞 ${number}`;
+      div.textContent = `${number}`; // Removed phone emoji
       approvedStreamContainer.appendChild(div);
 
       // Auto-remove old elements
@@ -224,7 +224,9 @@
 
     // Go to activation page
     function goToActivation(type = 'Business', amount = 150000, fee = 2500) {
-      alert(`Redirecting to activation for ${type} Loan`);
+      // Remove alert()
+      // Instead, navigate to the next page or perform actions here
+      console.log(`Navigating to activation for ${type} Loan`);
     }
   </script>
 
