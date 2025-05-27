@@ -85,34 +85,25 @@
       transform: translateY(-5px);
     }
 
-    .activate-btn {
-      margin-top: 20px;
-      background-color: #d4af37;
-      color: white;
-    }
-
     .approved-stream {
       margin-top: 30px;
-      font-size: 14px;
-      color: green;
-    }
-
-    .approved-stream-title {
-      font-weight: bold;
-      margin-bottom: 10px;
-      color: green;
+      width: 100%;
+      overflow-x: auto;
+      white-space: nowrap;
+      padding: 10px 0;
     }
 
     .approved-number {
       display: inline-block;
-      opacity: 0;
-      transform: translateY(10px);
-      transition: opacity 0.4s ease, transform 0.4s ease;
-    }
-
-    .approved-number.show {
-      opacity: 1;
-      transform: translateY(0);
+      background: #fffde7;
+      border: 1px solid #d4af37;
+      border-radius: 8px;
+      padding: 10px 15px;
+      margin-right: 10px;
+      font-size: 14px;
+      color: green;
+      min-width: 140px;
+      transition: opacity 0.3s ease;
     }
   </style>
 </head>
@@ -154,10 +145,9 @@
       </div>
       <button class="activate-btn" onclick="goToActivation()">Activate Account</button>
 
-      <!-- Stream of Approved Numbers -->
-      <div class="approved-stream">
-        <div class="approved-stream-title">✔️ Recent Approvals</div>
-        <div id="approvedStreamContainer"></div>
+      <!-- Horizontal Scroll Stream of Approvals -->
+      <div class="approved-stream" id="approvedStreamContainer">
+        <!-- Numbers will appear here -->
       </div>
     </div>
   </div>
@@ -171,34 +161,28 @@
 
     const approvedStreamContainer = document.getElementById('approvedStreamContainer');
 
-    // Generate number in format: 1000****26961
+    // Generate number in format: 1000****26961 → 13 digits total
     function generateRandomNumber() {
       const first = Math.floor(Math.random() * 900) + 100; // 3-digit
       const last = Math.floor(Math.random() * 90000) + 10000; // 5-digit
       return `1000${first}****${last}`;
     }
 
-    // Show random approval number with animation
+    // Show random approval number
     function showRandomApproval() {
       const number = generateRandomNumber();
       const div = document.createElement('div');
       div.className = 'approved-number';
       div.textContent = `📞 ${number}`;
-
       approvedStreamContainer.appendChild(div);
 
-      // Trigger animation
-      setTimeout(() => {
-        div.classList.add('show');
-      }, 10); // small delay to trigger reflow
-
-      // Keep only 5 latest numbers
-      if (approvedStreamContainer.children.length > 5) {
+      // Auto-remove old elements
+      if (approvedStreamContainer.children.length > 10) {
         approvedStreamContainer.removeChild(approvedStreamContainer.firstChild);
       }
     }
 
-    // Start showing approvals every few seconds
+    // Start stream
     function startApprovalStream() {
       showRandomApproval(); // Show one immediately
       setInterval(showRandomApproval, 2000); // Every 2 seconds
@@ -238,7 +222,7 @@
       startApprovalStream();
     });
 
-    // Dummy activation function
+    // Go to activation page
     function goToActivation(type = 'Business', amount = 150000, fee = 2500) {
       alert(`Redirecting to activation for ${type} Loan`);
     }
