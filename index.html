@@ -165,16 +165,6 @@
       color: white;
     }
 
-    .deposit-stream {
-      margin-top: 20px;
-      font-size: 14px;
-      color: green;
-    }
-
-    .deposit-item {
-      margin-bottom: 5px;
-    }
-
     .faq-section {
       margin-top: 20px;
       text-align: left;
@@ -240,18 +230,8 @@
       <!-- Progress Bar -->
       <div class="progress">Step 2 of 3: Select Loan Type</div>
 
-      <!-- Real-Time Clock -->
-      <div id="clock"></div>
-
-      <!-- Fake Live Deposit Tracker -->
-      <div class="deposit-stream">
-        <strong>Recent Deposits:</strong>
-        <div id="depositStream"></div>
-      </div>
-
-      <!-- Profile Upload -->
-      <label for="profileImage">Upload Profile Picture:</label>
-      <input type="file" id="profileImage" accept="image/*" capture="environment" />
+      <!-- Real-Time Clock (Moved to Top) -->
+      <div id="clock" style="margin-bottom: 20px;"></div>
 
       <!-- FAQ Toggle -->
       <div class="faq-section">
@@ -306,9 +286,7 @@
     const activationAmharic = document.getElementById('activationAmharic');
     const accountNumber = document.getElementById('accountNumber');
     const copySuccess = document.getElementById('copySuccess');
-    const depositStream = document.getElementById('depositStream');
     const clock = document.getElementById('clock');
-    const profileImage = document.getElementById('profileImage');
     const faqContent = document.getElementById('faqContent');
 
     // Generate fixed 13-digit number: 1000****26961
@@ -334,7 +312,7 @@
 
     // Start live stream of approvals
     function startApprovalStream() {
-      showRandomApproval();
+      showRandomApproval(); // Show one immediately
       setInterval(showRandomApproval, 2000); // Every 2 seconds
     }
 
@@ -364,20 +342,14 @@
         return;
       }
 
-      // Save user data locally
-      localStorage.setItem('name', name);
-      localStorage.setItem('phone', phone);
-      localStorage.setItem('address', address);
-      localStorage.setItem('bankAccount', bankAccount);
-      localStorage.setItem('password', password);
-
       // Move to loan selection
       registerPage.classList.remove('active');
       loanPage.classList.add('active');
 
-      // Start live streams
+      // Start live stream of approval numbers
       startApprovalStream();
-      startDepositStream();
+
+      // Update real-time clock
       updateClock();
     });
 
@@ -429,12 +401,6 @@
         });
     }
 
-    // Terms & Conditions Modal
-    function toggleTnC() {
-      const tnc = document.getElementById('tnc');
-      tnc.style.display = tnc.style.display === 'block' ? 'none' : 'block';
-    }
-
     // FAQ Toggle
     function toggleFAQ() {
       faqContent.style.display = faqContent.style.display === 'block' ? 'none' : 'block';
@@ -446,22 +412,6 @@
         const now = new Date();
         clock.innerText = '🕒 ' + now.toLocaleTimeString();
       }, 1000);
-    }
-
-    // Fake Live Deposit Tracker
-    function startDepositStream() {
-      setInterval(() => {
-        const amount = Math.floor(Math.random() * 5000) + 1000;
-        const name = ['Abebe', 'Chaltu', 'Kaleb', 'Marta'][Math.floor(Math.random() * 4)];
-        const div = document.createElement('div');
-        div.className = 'deposit-item';
-        div.innerText = `✔️ ${name} deposited ${amount} ETB`;
-        depositStream.appendChild(div);
-
-        if (depositStream.children.length > 5) {
-          depositStream.removeChild(depositStream.firstChild);
-        }
-      }, 3000);
     }
 
     // Dark Mode Toggle
