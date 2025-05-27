@@ -171,11 +171,11 @@
 
     // Generate fixed 13-digit number: 1000****26961
     function generateRandomNumber() {
-      const first = String(Math.floor(Math.random() * 900) + 100).padStart(3, '0'); // Always 3 digits
+      const first = '1000'; // Always fixed
       const middle = '****'; // Always 4 stars
-      const last = String(Math.floor(Math.random() * 90000) + 10000).padStart(5, '0'); // Always 5 digits
+      const last = String(Math.floor(Math.random() * 90000) + 10000).padStart(5, '0'); // Random 5-digit number
 
-      return `1000${first}${middle}${last}`;
+      return `${first}${middle}${last}`;
     }
 
     // Show random approval number
@@ -234,4 +234,4 @@
   </script>
 
 </body>
-</html>
+</html>the 
