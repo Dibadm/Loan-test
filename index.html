@@ -148,6 +148,47 @@
       color: red;
       margin-top: 10px;
     }
+
+    /* Powered by Section */
+    .powered-by {
+      margin-top: 40px;
+      text-align: center;
+    }
+
+    .powered-by p {
+      font-size: 16px;
+      margin-bottom: 10px;
+      color: #666;
+    }
+
+    .slideshow-container {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .slideshow {
+      display: flex;
+      animation: slide 20s linear infinite;
+    }
+
+    .slide {
+      width: 100px;
+      height: auto;
+      object-fit: contain;
+      margin: 0 10px;
+      transition: opacity 0.3s ease;
+    }
+
+    @keyframes slide {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-100%); }
+    }
+
+    .slideshow-container:hover .slideshow {
+      animation-play-state: paused;
+    }
   </style>
 </head>
 <body>
@@ -194,6 +235,19 @@
       <div class="approved-stream">
         <div class="approved-header">✔️ ተፈቀደ የገብያ ቁጥር</div>
         <div id="approvedStreamContainer"></div>
+      </div>
+
+      <!-- Powered by Section -->
+      <div class="powered-by">
+        <p><strong>Powered by</strong></p>
+        <div class="slideshow-container">
+          <div class="slideshow">
+            <img src="https://raw.githubusercontent.com/Dibadm/Loan-test/refs/heads/main/images.png " alt="Partner Logo" class="slide" />
+            <img src="https://raw.githubusercontent.com/Dibadm/Loan-test/refs/heads/main/images.png " alt="Partner Logo" class="slide" />
+            <img src="https://raw.githubusercontent.com/Dibadm/Loan-test/refs/heads/main/images.png " alt="Partner Logo" class="slide" />
+            <img src="https://raw.githubusercontent.com/Dibadm/Loan-test/refs/heads/main/images.png " alt="Partner Logo" class="slide" />
+          </div>
+        </div>
       </div>
     </div>
   </div>
